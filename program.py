@@ -14,6 +14,8 @@ def printNumbered(index, toPrint):
 
 # keys. Returns all keys in the dictionary. Order is not guaranteed.
 def keys() :
+  if not _multiValueDict:
+    print(constants.KEYS_EMPTY)
   for i, key in enumerate(_multiValueDict):
     printNumbered(i, key)
 
@@ -40,15 +42,30 @@ def add(key, value):
 
 # remove. Takes a key, value par and removes it from the multiValueDict.
 def remove(key, value):
-  stub()
+  existingValues = _multiValueDict.get(key)
+  if existingValues is not None:
+    if value in existingValues:
+      existingValues.remove(value)
+      print(constants.REMOVE_SUCCESS)
+    else:
+      print(constants.ERR_MEMBER_NONEXISTENT)
+    if not existingValues:
+      _multiValueDict.pop(key)
+  else:
+    print(constants.ERR_KEY_NONEXISTENT)
 
 # removeAll. Remove all members for a key and removes the key from the dictionary. Returns an error if the key does not exist.
-def removeAll():
-  stub()
+def removeAll(key):
+  if key in _multiValueDict:
+    _multiValueDict.pop(key)
+    print(constants.REMOVE_SUCCESS)
+  else:
+    print(constants.ERR_KEY_NONEXISTENT)
 
 # Removes all keys and all members from the dictionary.
 def clear():
-  stub()
+  initDict()
+  print(constants.CLEAR_SUCCESS)
 
 # keyExists. Returns whether a key exists or not.
 def keyExists():
@@ -78,7 +95,7 @@ def validateArguments(command, arguments):
   match(command):
     case constants.CMD_ADD | constants.CMD_REMOVE | constants.CMD_MEMBEREXISTS:
       expected = 2
-    case constants.CMD_KEYEXISTS | constants.CMD_MEMBERS:
+    case constants.CMD_KEYEXISTS | constants.CMD_MEMBERS | constants.CMD_REMOVEALL:
       expected = 1
   if len(arguments) != expected:
     invalidArgumentCount(command, arguments, expected)
@@ -102,7 +119,7 @@ def processInput(userInput):
       case constants.CMD_REMOVE:
         remove(arguments[0], arguments[1])
       case constants.CMD_REMOVEALL:
-        removeAll()
+        removeAll(arguments[0])
       case constants.CMD_CLEAR:
         clear()
       case constants.CMD_KEYEXISTS:

@@ -12,9 +12,14 @@ CMD_ITEMS = "ITEMS"
 
 # Command feedback
 ADD_SUCCESS = ") Added"
+REMOVE_SUCCESS = ") Removed"
+CLEAR_SUCCESS = ") Cleared"
+KEYS_EMPTY = ") empty set"
+
 
 # Error strings
 ERR = ") ERROR, "
 ERR_KEY_NONEXISTENT = ERR + "key does not exist"
 ERR_KEY_NONEXISTENT_PUNC = ERR + ERR_KEY_NONEXISTENT + "."
 ERR_MEMBER_EXISTS = ERR + "member already exists for key"
+ERR_MEMBER_NONEXISTENT = ERR + "member does not exist"
