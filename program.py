@@ -5,26 +5,35 @@ def initDict():
   global _multiValueDict
   _multiValueDict = {}
 
-#stub - used to structure project initially.
-def stub() : 
-  print("TODO")
-
 def printNumbered(index, toPrint):
   print("%s) %s" %(index + 1, toPrint))
 
 # keys. Returns all keys in the dictionary. Order is not guaranteed.
 def keys() :
-  if not _multiValueDict:
+  return _multiValueDict.keys()
+
+# commandline driver for keys.
+def cmdKeys():
+  allKeys = keys()
+  if not allKeys:
     print(constants.KEYS_EMPTY)
-  for i, key in enumerate(_multiValueDict):
+  for i, key in enumerate(allKeys):
     printNumbered(i, key)
 
 # members. Returns the collection of strings for the given key. Order is not guaranteed.
 def members(key) :
-  if _multiValueDict.get(key) is None:
+  result = []
+  for value in _multiValueDict.get(key):
+    result.append(value)
+  return result
+
+# commandline driver for members.
+def cmdMembers(key):
+  allMembers = members(key)
+  if not allMembers:
     print(constants.ERR_KEY_NONEXISTENT_PUNC)
   else:
-    for i, value in enumerate(_multiValueDict.get(key)):
+    for i, value in enumerate(allMembers):
       printNumbered(i, value)
 
 # add. Takes a key, value pair and adds it to the multiValueDict.
@@ -32,32 +41,61 @@ def add(key, value):
   existingValues = _multiValueDict.get(key)
   if existingValues is not None:
     if value in existingValues:
-      print(constants.ERR_MEMBER_EXISTS)
+      return False
     else:
       existingValues.append(value)
-      print(constants.ADD_SUCCESS)
+      return True
   else :
     _multiValueDict[key] = [value]
+    return True
+
+# commandline driver for add.
+def cmdAdd(key, value):
+  added = add(key, value)
+  if added:
     print(constants.ADD_SUCCESS)
+  else:
+    print(constants.ERR_MEMBER_EXISTS)
 
 # remove. Takes a key, value par and removes it from the multiValueDict.
+# returns 0 on success, 1 if member nonexistent, 2 if key nonexistent
 def remove(key, value):
   existingValues = _multiValueDict.get(key)
   if existingValues is not None:
     if value in existingValues:
       existingValues.remove(value)
-      print(constants.REMOVE_SUCCESS)
+      if not existingValues:
+        _multiValueDict.pop(key)
+      return 0
     else:
-      print(constants.ERR_MEMBER_NONEXISTENT)
-    if not existingValues:
-      _multiValueDict.pop(key)
+      return 1
   else:
-    print(constants.ERR_KEY_NONEXISTENT)
+    return 2
+
+# commandline driver for remove.
+def cmdRemove(key, value):
+  result = remove(key, value)
+  match(result):
+    case 0:
+      print(constants.REMOVE_SUCCESS)
+    case 1:
+      print(constants.ERR_MEMBER_NONEXISTENT)
+    case 2:
+      print(constants.ERR_KEY_NONEXISTENT)
+
 
 # removeAll. Remove all members for a key and removes the key from the dictionary. Returns an error if the key does not exist.
 def removeAll(key):
   if key in _multiValueDict:
     _multiValueDict.pop(key)
+    return True
+  else:
+    return False
+
+# commandline driver for removeall.
+def cmdRemoveAll(key):
+  result = removeAll(key)
+  if (result):
     print(constants.REMOVE_SUCCESS)
   else:
     print(constants.ERR_KEY_NONEXISTENT)
@@ -65,47 +103,78 @@ def removeAll(key):
 # Removes all keys and all members from the dictionary.
 def clear():
   initDict()
+
+# commandline driver clear.
+def cmdClear():
+  clear()
   print(constants.CLEAR_SUCCESS)
+
 
 # keyExists. Returns whether a key exists or not.
 def keyExists(key):
   if key in _multiValueDict:
-    print(constants.EXISTS_TRUE)
     return True
-  print(constants.EXISTS_FALSE)
   return False
+
+# commandline driver for keyExists.
+def cmdKeyExsits(key):
+  if keyExists(key):
+    print(constants.EXISTS_TRUE)
+  else:
+    print(constants.EXISTS_FALSE)
 
 # memberexists. Returns whether a member exists within a key. Returns false if the key does not exist.
 def memberExists(key, value):
   existingValues = _multiValueDict.get(key)
   if existingValues is not None:
     if value in existingValues:
-      print(constants.EXISTS_TRUE)
       return True
-  print(constants.EXISTS_FALSE)
   return False
+
+# commandline driver for memberExists.
+def cmdMemberExsits(key, value):
+  if memberExists(key, value):
+    print(constants.EXISTS_TRUE)
+  else:
+    print(constants.EXISTS_FALSE)
   
 # allMembers. Returns all the members in the dictionary. Returns nothing if there are none. Order is not guaranteed.
 def allMembers():
-  if not _multiValueDict:
+  result = []
+  for key in _multiValueDict:
+    for value in _multiValueDict.get(key):
+      result.append(value)
+  return result
+
+# commandline driver for allMembers.
+def cmdAllMembers():
+  result = allMembers()
+  if not result:
     print(constants.ALLMEMBERS_EMPTY)
   else:
-    i = 0
-    for key in _multiValueDict:
-      for value in _multiValueDict.get(key):
-        printNumbered(i, value)
-        i += 1
+    for i, value in enumerate(result):
+      printNumbered(i, value)
+
   
 # items. Returns all keys in the dictionary and all of their members. Returns nothing if there are none. Order is not guaranteed.
 def items():
+  result = []
   if not _multiValueDict:
     print(constants.ALLMEMBERS_EMPTY)
   else:
-    i = 0
     for key in _multiValueDict:
       for value in _multiValueDict.get(key):
-        printNumbered(i, key + ": " + value)
-        i += 1
+        result.append(key + ": " + value)
+  return result
+
+#commandline driver for items.
+def cmdItems():
+  result = allMembers()
+  if not result:
+    print(constants.ALLMEMBERS_EMPTY)
+  else:
+    for i, value in enumerate(result):
+      printNumbered(i, value)
 
 def invalidCommand(command):
   print("Invalid Command entered: %s" %(command))
@@ -135,25 +204,25 @@ def processInput(userInput):
   if validateArguments(command, arguments):
     match command:
       case constants.CMD_KEYS:
-        keys()
+        cmdKeys()
       case constants.CMD_MEMBERS:
-        members(arguments[0])
+        cmdMembers(arguments[0])
       case constants.CMD_ADD:
-        add(arguments[0], arguments[1])
+        cmdAdd(arguments[0], arguments[1])
       case constants.CMD_REMOVE:
-        remove(arguments[0], arguments[1])
+        cmdRemove(arguments[0], arguments[1])
       case constants.CMD_REMOVEALL:
-        removeAll(arguments[0])
+        cmdRemoveAll(arguments[0])
       case constants.CMD_CLEAR:
         clear()
       case constants.CMD_KEYEXISTS:
-        keyExists(arguments[0])
+        cmdKeyExsits(arguments[0])
       case constants.CMD_MEMBEREXISTS:
-        memberExists(arguments[0], arguments[1])
+        cmdMemberExsits(arguments[0], arguments[1])
       case constants.CMD_ALLMEMBERS:
-        allMembers()
+        cmdAllMembers()
       case constants.CMD_ITEMS:
-        items()
+        cmdItems()
       case _:
         invalidCommand(command)
 

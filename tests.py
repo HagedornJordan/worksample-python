@@ -22,6 +22,12 @@ class TestInputValidation(unittest.TestCase):
         self.assertEqual(out.getvalue().strip(), "Invalid number of args for command ADD. Expected (2), got (1).")
 
 class TestMultiValueDict(unittest.TestCase):
+
+    def testKeys(self):
+        program.initDict()
+        program.add("a", "a")
+        print(program.keys())
+
     def testAddSingle(self):
         program.initDict()
         out = handleInput("ADD foo bar")
