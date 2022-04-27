@@ -68,20 +68,44 @@ def clear():
   print(constants.CLEAR_SUCCESS)
 
 # keyExists. Returns whether a key exists or not.
-def keyExists():
-  stub()
+def keyExists(key):
+  if key in _multiValueDict:
+    print(constants.EXISTS_TRUE)
+    return True
+  print(constants.EXISTS_FALSE)
+  return False
 
 # memberexists. Returns whether a member exists within a key. Returns false if the key does not exist.
-def memberExists():
-  stub()
+def memberExists(key, value):
+  existingValues = _multiValueDict.get(key)
+  if existingValues is not None:
+    if value in existingValues:
+      print(constants.EXISTS_TRUE)
+      return True
+  print(constants.EXISTS_FALSE)
+  return False
   
 # allMembers. Returns all the members in the dictionary. Returns nothing if there are none. Order is not guaranteed.
 def allMembers():
-  stub()
-
+  if not _multiValueDict:
+    print(constants.ALLMEMBERS_EMPTY)
+  else:
+    i = 0
+    for key in _multiValueDict:
+      for value in _multiValueDict.get(key):
+        printNumbered(i, value)
+        i += 1
+  
 # items. Returns all keys in the dictionary and all of their members. Returns nothing if there are none. Order is not guaranteed.
 def items():
-  stub()
+  if not _multiValueDict:
+    print(constants.ALLMEMBERS_EMPTY)
+  else:
+    i = 0
+    for key in _multiValueDict:
+      for value in _multiValueDict.get(key):
+        printNumbered(i, key + ": " + value)
+        i += 1
 
 def invalidCommand(command):
   print("Invalid Command entered: %s" %(command))
@@ -95,7 +119,7 @@ def validateArguments(command, arguments):
   match(command):
     case constants.CMD_ADD | constants.CMD_REMOVE | constants.CMD_MEMBEREXISTS:
       expected = 2
-    case constants.CMD_KEYEXISTS | constants.CMD_MEMBERS | constants.CMD_REMOVEALL:
+    case constants.CMD_KEYEXISTS | constants.CMD_MEMBERS | constants.CMD_REMOVEALL | constants.CMD_KEYEXISTS:
       expected = 1
   if len(arguments) != expected:
     invalidArgumentCount(command, arguments, expected)
@@ -128,6 +152,8 @@ def processInput(userInput):
         memberExists(arguments[0], arguments[1])
       case constants.CMD_ALLMEMBERS:
         allMembers()
+      case constants.CMD_ITEMS:
+        items()
       case _:
         invalidCommand(command)
 

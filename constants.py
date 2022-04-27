@@ -15,6 +15,10 @@ ADD_SUCCESS = ") Added"
 REMOVE_SUCCESS = ") Removed"
 CLEAR_SUCCESS = ") Cleared"
 KEYS_EMPTY = ") empty set"
+ALLMEMBERS_EMPTY = "(empty set)"
+EXISTS_TRUE = ") true"
+EXISTS_FALSE = ") false"
+
 
 
 # Error strings
