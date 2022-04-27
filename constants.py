@@ -9,3 +9,12 @@ CMD_KEYEXISTS = "KEYEXISTS"
 CMD_MEMBEREXISTS = "MEMBEREXISTS"
 CMD_ALLMEMBERS = "ALLMEMBERS"
 CMD_ITEMS = "ITEMS"
+
+# Command feedback
+ADD_SUCCESS = ") Added"
+
+# Error strings
+ERR = ") ERROR, "
+ERR_KEY_NONEXISTENT = ERR + "key does not exist"
+ERR_KEY_NONEXISTENT_PUNC = ERR + ERR_KEY_NONEXISTENT + "."
+ERR_MEMBER_EXISTS = ERR + "member already exists for key"
