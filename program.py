@@ -216,7 +216,7 @@ def processInput(userInput):
       case constants.CMD_REMOVEALL:
         cmdRemoveAll(arguments[0])
       case constants.CMD_CLEAR:
-        clear()
+        cmdClear()
       case constants.CMD_KEYEXISTS:
         cmdKeyExsits(arguments[0])
       case constants.CMD_MEMBEREXISTS:
