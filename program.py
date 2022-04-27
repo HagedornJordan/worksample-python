@@ -23,8 +23,9 @@ def cmdKeys():
 # members. Returns the collection of strings for the given key. Order is not guaranteed.
 def members(key) :
   result = []
-  for value in _multiValueDict.get(key):
-    result.append(value)
+  if _multiValueDict.get(key) is not None:
+    for value in _multiValueDict.get(key):
+      result.append(value)
   return result
 
 # commandline driver for members.
@@ -36,7 +37,8 @@ def cmdMembers(key):
     for i, value in enumerate(allMembers):
       printNumbered(i, value)
 
-# add. Takes a key, value pair and adds it to the multiValueDict.
+# add. Takes a key, value pair and adds it to the multiValueDict. 
+# Returns true if succeeds, else false
 def add(key, value):
   existingValues = _multiValueDict.get(key)
   if existingValues is not None:
