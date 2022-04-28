@@ -162,7 +162,7 @@ def cmdAllMembers():
 def items():
   result = []
   if not _multiValueDict:
-    print(constants.ALLMEMBERS_EMPTY)
+    return result
   else:
     for key in _multiValueDict:
       for value in _multiValueDict.get(key):
@@ -171,21 +171,26 @@ def items():
 
 #commandline driver for items.
 def cmdItems():
-  result = allMembers()
+  result = items()
   if not result:
     print(constants.ALLMEMBERS_EMPTY)
   else:
     for i, value in enumerate(result):
       printNumbered(i, value)
 
+# helper to print invalid command.
 def invalidCommand(command):
   print("Invalid Command entered: %s" %(command))
 
+# helper to print invalid number of args.
 def invalidArgumentCount(command, arguments, needed):
   print ("Invalid number of args for command %s. Expected (%s), got (%s)." %(command, needed, len(arguments)))
 
-# validate arguments. Used to check number of arguments matches what is expected. In the future, we could perform more validations (sanitize user input)
-def validateArguments(command, arguments):
+# validate input. Used to check user input. In the future, we could perform more validations (sanitize user input)
+def validateInput(command, arguments):
+  if command not in constants.ALL_CMDS: 
+    invalidCommand(command)
+    return False
   expected = 0
   match(command):
     case constants.CMD_ADD | constants.CMD_REMOVE | constants.CMD_MEMBEREXISTS:
@@ -203,7 +208,7 @@ def processInput(userInput):
   command = tokenized[0]
   tokenized.remove(command)
   arguments = tokenized
-  if validateArguments(command, arguments):
+  if validateInput(command, arguments):
     match command:
       case constants.CMD_KEYS:
         cmdKeys()
