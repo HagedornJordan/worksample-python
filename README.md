@@ -16,3 +16,5 @@ To run all unit tests, run `python -m unittest tests`.
 To just run input validation tests, run `python -m unittest tests.TestInputValidation` 
 
 To run the multiValueDict test, run `python -m unittest tests.TestMultiValueDict`
+
+To run the stress test, run `python -m unittest tests.StressTest`
