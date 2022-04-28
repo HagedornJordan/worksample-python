@@ -3,6 +3,7 @@ import sys
 import io
 import program
 import constants
+import random
 
 def handleInput(input):
     ogErr = sys.stderr
@@ -14,6 +15,9 @@ def handleInput(input):
     sys.stdout = ogOut
     sys.stderr = ogErr
     return out
+
+def randAscii():
+    return random.randint(constants.MIN_ASCII, constants.MAX_ASCII)
 
 class TestInputValidation(unittest.TestCase):
     def testAdd(self):
@@ -157,6 +161,23 @@ class TestMultiValueDict(unittest.TestCase):
         self.assertTrue("bang: bar" in allItems)
         self.assertTrue("bang: baz" in allItems)
         self.assertFalse("fizz: baz" in allItems)
+
+class StressTest(unittest.TestCase):
+    def testMultiAdd(self):
+        program.initDict()
+        successes = 0
+        for i in range(constants.PAIRS_TO_GENERATE):
+            keyLen = random.randint(1, constants.MAX_KEY_LEN)
+            valLen = random.randint(1, constants.MAX_VALUE_LEN)
+            key = ""
+            val = ""
+            for j in range(keyLen):
+                key += chr(randAscii())
+            for j in range(valLen):
+                val += chr(randAscii())
+            if program.add(key, val) : successes += 1
+        numKeys = len(program.keys())
+        self.assertEqual(successes, numKeys)
 
 if __name__ == '__main__':
     unittest.main()

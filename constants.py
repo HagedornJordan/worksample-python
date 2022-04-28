@@ -29,3 +29,11 @@ ERR_KEY_NONEXISTENT = ERR + "key does not exist"
 ERR_KEY_NONEXISTENT_PUNC = ERR_KEY_NONEXISTENT + "."
 ERR_MEMBER_EXISTS = ERR + "member already exists for key"
 ERR_MEMBER_NONEXISTENT = ERR + "member does not exist"
+
+
+# Unit tests
+MIN_ASCII = 33
+MAX_ASCII = 126
+PAIRS_TO_GENERATE = 100
+MAX_KEY_LEN = 1000
+MAX_VALUE_LEN = 100
